@@ -1,0 +1,49 @@
+name: Deploy
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22]
+    environment:
+      name: github-pages
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm ⚡️
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@main
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies ⚡️
+        run: pnpm install --frozen-lockfile
+
+      - name: Build 🛠️
+        run: pnpm docs:build
+
+      - name: Deploy 🚀
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/.vitepress/dist
+          user_name: "github-actions[bot]"
+          user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          commit_message: "🐎 ci: Deploy"
+          force_orphan: true
