@@ -4,6 +4,9 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Unicom Studio",
   description: "Studio for Unicom",
+  head: [
+    ['link', { rel: "shortcut icon", href: "/Unicom.ico"}],
+  ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

@@ -14,7 +14,7 @@ hero:
       text: 服务介绍
       link: /services
   image:
-    src: /logo.png
+    src: /Unicom.svg
     alt: "Unicom Studio"
 
 features:
